@@ -26,7 +26,7 @@ public class ChatCompletionRequest extends CompletionRequest {
   public static class Builder extends CompletionRequest.Builder {
 
     private final List<ChatCompletionMessage> messages;
-    private String model = ChatCompletionModel.GPT_3_5.getCode();
+    private String model = ChatCompletionModel.AZURE_GPT_3_5.getCode();
 
     public Builder(List<ChatCompletionMessage> messages) {
       this.messages = messages;

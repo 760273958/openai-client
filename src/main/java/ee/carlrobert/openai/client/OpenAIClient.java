@@ -1,5 +1,7 @@
 package ee.carlrobert.openai.client;
 
+import ee.carlrobert.openai.client.completion.UrlCompletionModel;
+import ee.carlrobert.openai.client.completion.chat.ChatCompletionModel;
 import ee.carlrobert.openai.client.dashboard.DashboardClient;
 import ee.carlrobert.openai.client.completion.chat.ChatCompletionClient;
 import ee.carlrobert.openai.client.completion.text.TextCompletionClient;
@@ -15,7 +17,9 @@ public class OpenAIClient {
   final TimeUnit connectTimeoutUnit;
   final Long readTimeout;
   final TimeUnit readTimeoutUnit;
+  final String chatCompletionOptionSelected;
 
+  final String url;
   private OpenAIClient(Builder builder) {
     this.apiKey = builder.apiKey;
     this.proxy = builder.proxy;
@@ -24,6 +28,9 @@ public class OpenAIClient {
     this.connectTimeoutUnit = builder.connectTimeoutUnit;
     this.readTimeout = builder.readTimeout;
     this.readTimeoutUnit = builder.readTimeoutUnit;
+    this.chatCompletionOptionSelected = builder.chatCompletionOptionSelected;
+    ChatCompletionModel byCode = ChatCompletionModel.findByCode(this.chatCompletionOptionSelected);
+    this.url = byCode.getDescription();
   }
 
   public static class Builder {
@@ -35,6 +42,9 @@ public class OpenAIClient {
     private TimeUnit connectTimeoutUnit;
     private Long readTimeout;
     private TimeUnit readTimeoutUnit;
+
+    private String chatCompletionOptionSelected;
+
 
     public Builder(String apiKey) {
       this.apiKey = apiKey;
@@ -62,8 +72,16 @@ public class OpenAIClient {
       return this;
     }
 
+    public Builder setChatCompletionOptionSelected(String chatCompletionOptionSelected) {
+      this.chatCompletionOptionSelected = chatCompletionOptionSelected;
+      return this;
+    }
+
     public ChatCompletionClient buildChatCompletionClient() {
-      return new ChatCompletionClient(new OpenAIClient(this));
+      //放入url
+      UrlCompletionModel byCode = UrlCompletionModel.findByCode(this.chatCompletionOptionSelected);
+      String url = byCode.getDescription();
+      return new ChatCompletionClient(new OpenAIClient(this),url);
     }
 
     public TextCompletionClient buildTextCompletionClient() {

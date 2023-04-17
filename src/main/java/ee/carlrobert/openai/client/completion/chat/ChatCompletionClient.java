@@ -9,8 +9,11 @@ import okhttp3.sse.EventSource;
 
 public class ChatCompletionClient extends CompletionClient {
 
-  public ChatCompletionClient(OpenAIClient client) {
-    super(client, "https://api.openai.com/v1/chat/completions");
+  public ChatCompletionClient(OpenAIClient client,String url) {
+//    super(client, "https://api.openai.com/v1/chat/completions");
+
+//    super(client, "https://api.openai.com/v1/chat/completions");
+    super(client, url);
   }
 
   @Override
